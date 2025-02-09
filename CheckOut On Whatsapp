@@ -1,0 +1,35 @@
+if (!function_exists('generate_whatsapp_cart_message')) {
+    function generate_whatsapp_cart_message() {
+        $whatsapp_number = '00000000000'; // Replace with your WhatsApp number
+        $cart = WC()->cart;
+
+        if ($cart->is_empty()) return '';
+
+        $message = " *Order Summary* \n";
+        $message .= " ------------------------------------------------------ \n";
+
+        foreach ($cart->get_cart() as $cart_item) {
+            $product_name = $cart_item['data']->get_name();
+            $quantity = $cart_item['quantity'];
+            $price_per_item = html_entity_decode(strip_tags(wc_price($cart_item['data']->get_price())));
+            $total_price = html_entity_decode(strip_tags(wc_price($cart_item['data']->get_price() * $quantity)));
+
+            $message .= " *$product_name* \n";
+            $message .= " *Qty* : $quantity  |  *Price*: $total_price \n";
+            $message .= "-------------------------------------------------\n";
+        }
+
+        // Correct way to get grand total
+        $grand_total = html_entity_decode(strip_tags(WC()->cart->get_cart_total()));
+
+        $message .= " *Grand Total* : $grand_total\n";
+        $message .= " ------------------------------------------------------ \n";
+        $message .= " *Thank you for your order!* ";
+
+        $whatsapp_link = "https://wa.me/$whatsapp_number?text=" . urlencode($message);
+
+        return '<a href="' . esc_url($whatsapp_link) . '" target="_blank" class="button whatsapp-checkout" style="background:#25D366; color:white; padding:16px 16px; text-align:center; display:block; margin-top:10px;">
+            Checkout on WhatsApp
+        </a>';
+    }
+}
