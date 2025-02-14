@@ -33,3 +33,23 @@ if (!function_exists('generate_whatsapp_cart_message')) {
         </a>';
     }
 }
+
+if (!function_exists('add_whatsapp_button_mini_cart')) {
+    function add_whatsapp_button_mini_cart() {
+        echo generate_whatsapp_cart_message();
+    }
+    add_action('woocommerce_widget_shopping_cart_buttons', 'add_whatsapp_button_mini_cart', 20);
+}
+
+// Ensure function is only declared once
+if (!function_exists('add_whatsapp_button_cart_page')) {
+    function add_whatsapp_button_cart_page() {
+        echo generate_whatsapp_cart_message();
+    }
+    add_action('woocommerce_proceed_to_checkout', 'add_whatsapp_button_cart_page', 20);
+}
+
+function add_whatsapp_button_cart_page() {
+    echo generate_whatsapp_cart_message();
+}
+add_action('woocommerce_proceed_to_checkout', 'add_whatsapp_button_cart_page', 20);
